@@ -38,3 +38,20 @@ exports.deductBalance = async (req, res) => {
   await user.save();
   res.status(200).json({ balance: user.balance });
 };
+
+exports.getUserInfo = async (req, res) => {
+  const { matricule } = req.body;
+  try {
+    const user = await User.findOne({ matricule });
+    if (!user) return res.status(404).send("User not found");
+
+    res.status(200).json({
+      fullName: user.fullName,
+      matricule: user.matricule,
+      balance: user.balance,
+    });
+  } catch (error) {
+    console.error(error);
+    res.status(500).send("Internal server error");
+  }
+};
